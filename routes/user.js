@@ -9,4 +9,10 @@ router.post("/signup",async function(req, res){
   })
 })
 
+router.post("/login",async function(req, res){
+  utils.user.login(req, function(err, response){
+    res.json(response)
+  })
+})
+
 module.exports = router;

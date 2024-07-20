@@ -3,6 +3,9 @@ const async = require("async")
 const {uploadFileToS3} = require("./aws_s3");
 const mongodb = require("../mongodb");
 const {ObjectId} = require("mongodb")
+const jwt = require("jsonwebtoken")
+
+
 const signup = (req, callback)=>{
     let reqBody = req.body;
     let files = req.files
@@ -37,6 +40,28 @@ const signup = (req, callback)=>{
                         })
                     }
                 }
+            },
+            function(userInfo,triggerCallback){
+                mongodb.user.findOne({email:userInfo.email},function(err, response){
+                    if(err){
+                        triggerCallback(true,{
+                            status:"error",
+                            message:"Error occurred while fetching user data",
+                            error:err
+                        })
+                    }
+                    else{
+                        if(response){
+                            triggerCallback(true,{
+                                status:"error",
+                                message:"User exists with the given email. Please Login"
+                            })
+                        }
+                        else{
+                            triggerCallback(null,userInfo)
+                        }
+                    }
+                })
             },
             function(userInfo, triggerCallback){
                 if(files && files.length>0){
@@ -88,4 +113,83 @@ const signup = (req, callback)=>{
     }
 }
 
+const login = (req, callback)=>{
+    let reqBody = req.body;
+    let criteria = {};
+    if(reqBody.email && reqBody.signInType){
+        async.waterfall([
+            function(triggerCallback){
+                criteria["email"] = reqBody.email;
+                mongodb.user.findOne(criteria,function(err, response){
+                    if(err){
+                        triggerCallback(true,{
+                            status:"error",
+                            message:"Error occurred while fetching user data",
+                            error:err
+                        })
+                    }
+                    else{
+                        if(response && response.email === reqBody.email){
+                            triggerCallback(null, response)
+                        }
+                        else{
+                            triggerCallback(true,{
+                                status:"error",
+                                message:"User record not found for the given email. Please register"
+                            })
+                        }
+                    }
+                })
+            },
+            function(userData, triggerCallback){
+                if(reqBody.signInType.toLowerCase() === "google"){
+                    triggerCallback(null, userData)
+                }
+                else{
+                    if(reqBody.password && reqBody.password!=""){
+                        let passwordValidity = bcrypt.compareSync(reqBody.password,userData.password);
+                        if(passwordValidity){
+                            triggerCallback(null, userData);
+                        }
+                        else{
+                            triggerCallback(true,{
+                                status:"error",
+                                message:"The password you entered is not correct. Please try again"
+                            })                            
+                        }
+                    }
+                    else{
+                        triggerCallback(true,{
+                            status:"error",
+                            message:"Please provide valid details"
+                        })
+                    }
+                }
+            },
+            function(userData, triggerCallback){
+                let minimalUserInfo = JSON.stringify({
+                    userId:userData.userId || "",
+                })
+                const token = jwt.sign(minimalUserInfo,process.env.SECRET_KEY)
+                triggerCallback(null,{
+                    status:"success",
+                    message:"Verification completed.Please explore the app",
+                    token:token
+                })
+            }
+        ],
+        function(err, result){
+            callback(err, result)
+        }
+    )
+    }
+    else{
+        callback(true,{
+            status:"error",
+            message:"Please provide valid details"
+        })
+    }
+}
+
 exports.signup = signup;
+exports.login = login;
