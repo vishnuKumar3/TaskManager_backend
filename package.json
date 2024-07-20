@@ -1,11 +1,19 @@
 {
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.616.0",
+    "@aws-sdk/lib-storage": "^3.616.0",
+    "async": "^3.2.5",
+    "aws-sdk": "^2.1659.0",
     "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "firebase": "^10.12.4",
+    "http-status-codes": "^2.3.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.8.0",
     "mongoose": "^8.5.1",
+    "multer": "*",
     "nodemon": "^3.1.4"
   },
   "name": "backend",
