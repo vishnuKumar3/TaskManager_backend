@@ -9,7 +9,7 @@ tasksRouter.post("/add-task",function(req, res){
     })
 })
 
-tasksRouter.get("/fetch-tasks",function(req, res){
+tasksRouter.post("/fetch-tasks",function(req, res){
     utils.tasks.fetchTasks(req,function(err, response){
         res.json(response);
         return;

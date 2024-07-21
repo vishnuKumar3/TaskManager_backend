@@ -60,9 +60,11 @@ const addTask = (req, callback)=>{
 }
 
 const fetchTasks = (req, callback)=>{
+    let reqBody = req.body;
     async.waterfall([
         function(triggerCallback){
-            mongodb.tasks.find({state:{$nin:[config.taskStates.DELETED]}},function(err, response){
+            let keyword = reqBody && reqBody.keyword?reqBody.keyword:"";
+            mongodb.tasks.find({title:{$regex:`.*${keyword}.*`,$options:"i"},state:{$nin:[config.taskStates.DELETED]}},function(err, response){
                 if(err){
                     triggerCallback(true,{
                         status:"error",
