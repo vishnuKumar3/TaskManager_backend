@@ -10,7 +10,7 @@ const storage = multer.memoryStorage()
 
 
 const app=express()
-app.use(cors({origin:["http://localhost:3000","https://master--task-management-react123.netlify.app/","https://task-management-react123.netlify.app/"]}))
+app.use(cors({origin:"*"}))
 app.use(express.json())
 app.use(multer({storage:storage}).any())
 app.use("/user",userRouter);
