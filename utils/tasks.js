@@ -66,8 +66,8 @@ const fetchTasks = (req, callback)=>{
         async.waterfall([
             function(triggerCallback){
                 let keyword = reqBody && reqBody.keyword?reqBody.keyword:"";
-                let projection = reqBody && reqBody.projection?reqBody.projection:{}
-                mongodb.tasks.find({userId:reqBody.userId,title:{$regex:`.*${keyword}.*`,$options:"i"},state:{$nin:[config.taskStates.DELETED]}},projection,function(err, response){
+                let sort = reqBody && reqBody.sort?reqBody.sort:{}
+                mongodb.tasks.find({userId:reqBody.userId,title:{$regex:`.*${keyword}.*`,$options:"i"},state:{$nin:[config.taskStates.DELETED]}},sort,function(err, response){
                     if(err){
                         triggerCallback(true,{
                             status:"error",

@@ -176,7 +176,13 @@ const login = (req, callback)=>{
                 triggerCallback(null,{
                     status:"success",
                     message:"Verification completed.Please explore the app",
-                    token:token
+                    token:token,
+                    userData:{
+                        userId:userData.userId || "",
+                        avatarInfo:userData.avatarInfo || "",
+                        firstName:userData.firstName || "",
+                        lastName:userData.lastName || ""
+                    }
                 })
             }
         ],
