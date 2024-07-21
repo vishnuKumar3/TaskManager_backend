@@ -24,6 +24,20 @@ tasksRouter.use(function(req, res, next){
                 }
             })
         }
+        else{
+            return res.json({
+                status:"error",
+                message:"Error occurred while processing the request",
+                error:err
+            })            
+        }
+    }
+    else{
+        return res.json({
+            status:"error",
+            message:"Error occurred while processing the request",
+            error:err
+        })        
     }
   })
 
