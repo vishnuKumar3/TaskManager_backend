@@ -28,7 +28,6 @@ tasksRouter.use(function(req, res, next){
             return res.json({
                 status:"error",
                 message:"Error occurred while processing the request",
-                error:err
             })            
         }
     }
@@ -36,7 +35,6 @@ tasksRouter.use(function(req, res, next){
         return res.json({
             status:"error",
             message:"Error occurred while processing the request",
-            error:err
         })        
     }
   })
