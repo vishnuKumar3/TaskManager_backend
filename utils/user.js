@@ -4,6 +4,7 @@ const {uploadFileToS3} = require("./aws_s3");
 const mongodb = require("../mongodb");
 const {ObjectId} = require("mongodb")
 const jwt = require("jsonwebtoken")
+const moment = require("moment")
 
 
 const signup = (req, callback)=>{
@@ -169,6 +170,7 @@ const login = (req, callback)=>{
             function(userData, triggerCallback){
                 let minimalUserInfo = JSON.stringify({
                     userId:userData.userId || "",
+                    createdAtUnixTime:moment().valueOf()
                 })
                 const token = jwt.sign(minimalUserInfo,process.env.SECRET_KEY)
                 triggerCallback(null,{

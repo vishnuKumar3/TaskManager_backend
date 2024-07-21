@@ -12,9 +12,9 @@ const findOne = async(criteria, callback)=>{
     }
 }
 
-const find = async(criteria, callback)=>{
+const find = async(criteria, projection, callback)=>{
     try{
-        let res = await tasks.find(criteria)
+        let res = await tasks.find(criteria, projection)
         console.log("tasks - find operation - success",res)
         callback(null, res)
     }

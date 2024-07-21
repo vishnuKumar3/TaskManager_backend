@@ -12,13 +12,14 @@ const addTask = (req, callback)=>{
         taskId:"",
         state:config.taskStates.TODO,
         createdAt:"",
+        userId:"",
         createdAtUnixTime:"",
         createdAtStr:"",
         title:"",
         description:""
     }
 
-    if(reqBody && reqBody.title && reqBody.description){
+    if(reqBody && reqBody.title && reqBody.description && reqBody.userId){
         async.waterfall([
             function(triggerCallback){
                 let uniqueId = new ObjectId();
@@ -61,54 +62,63 @@ const addTask = (req, callback)=>{
 
 const fetchTasks = (req, callback)=>{
     let reqBody = req.body;
-    async.waterfall([
-        function(triggerCallback){
-            let keyword = reqBody && reqBody.keyword?reqBody.keyword:"";
-            mongodb.tasks.find({title:{$regex:`.*${keyword}.*`,$options:"i"},state:{$nin:[config.taskStates.DELETED]}},function(err, response){
-                if(err){
-                    triggerCallback(true,{
-                        status:"error",
-                        message:"Error occurred while fetching tasks",
-                        error:err
-                    })
-                }
-                else{
-                    triggerCallback(null,response)
-                }
-            })
-        },
-        function(tasks, triggerCallback){
-            let taskStates = config.taskStates;
-            let categorizedTasks = {};            
-            Object.values(taskStates).map((state)=>{
-                categorizedTasks[state]=[]
-            })
-            tasks.map((task)=>{
-                if(task.state){
-                    if(categorizedTasks.hasOwnProperty(task.state)){
-                        categorizedTasks[task.state].push(task);
+    if(reqBody && reqBody.userId){
+        async.waterfall([
+            function(triggerCallback){
+                let keyword = reqBody && reqBody.keyword?reqBody.keyword:"";
+                let projection = reqBody && reqBody.projection?reqBody.projection:{}
+                mongodb.tasks.find({userId:reqBody.userId,title:{$regex:`.*${keyword}.*`,$options:"i"},state:{$nin:[config.taskStates.DELETED]}},projection,function(err, response){
+                    if(err){
+                        triggerCallback(true,{
+                            status:"error",
+                            message:"Error occurred while fetching tasks",
+                            error:err
+                        })
                     }
-                }
-            })
-            triggerCallback(null, {
-                status:"success",
-                message:"Successfully fetched all the tasks",
-                tasks:categorizedTasks
-            })
+                    else{
+                        triggerCallback(null,response)
+                    }
+                })
+            },
+            function(tasks, triggerCallback){
+                let taskStates = config.taskStates;
+                let categorizedTasks = {};            
+                Object.values(taskStates).map((state)=>{
+                    categorizedTasks[state]=[]
+                })
+                tasks.map((task)=>{
+                    if(task.state){
+                        if(categorizedTasks.hasOwnProperty(task.state)){
+                            categorizedTasks[task.state].push(task);
+                        }
+                    }
+                })
+                triggerCallback(null, {
+                    status:"success",
+                    message:"Successfully fetched all the tasks",
+                    tasks:categorizedTasks
+                })
+            }
+        ],
+        function(err, result){
+            callback(err, result)
         }
-    ],
-    function(err, result){
-        callback(err, result)
+        )
     }
-    )
+    else{
+        callback(true,{
+            status:"error",
+            message:"Please provide valid details"
+        })
+    }
 }
 
 const findTaskById = (req, callback)=>{
     let reqBody = req.body;
-    if(reqBody && reqBody.taskId){
+    if(reqBody && reqBody.taskId && reqBody.userId){
         async.waterfall([
             function(triggerCallback){
-                mongodb.tasks.findOne({taskId:reqBody.taskId},function(err, response){
+                mongodb.tasks.findOne({taskId:reqBody.taskId, userId:reqBody.userId},function(err, response){
                     if(err){
                         triggerCallback(true,{
                             status:"error",
@@ -141,10 +151,10 @@ const findTaskById = (req, callback)=>{
 
 const updateTaskById = (req, callback)=>{
     let reqBody = req.body;
-    if(reqBody && reqBody.taskId && reqBody.updateInfo){
+    if(reqBody && reqBody.taskId &&  reqBody.userId && reqBody.updateInfo){
         async.waterfall([
             function(triggerCallback){
-                mongodb.tasks.updateOne({taskId:reqBody.taskId},{$set:reqBody.updateInfo},function(err, response){
+                mongodb.tasks.updateOne({taskId:reqBody.taskId, userId:reqBody.userId},{$set:reqBody.updateInfo},function(err, response){
                     if(err){
                         triggerCallback(true,{
                             status:"error",
