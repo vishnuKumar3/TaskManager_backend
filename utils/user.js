@@ -117,9 +117,12 @@ const signup = (req, callback)=>{
 const login = (req, callback)=>{
     let reqBody = req.body;
     let criteria = {};
-    if(reqBody.email && reqBody.signInType){
+    callback(null,{
+        status:"error1"
+    })
+    /*if(reqBody.email && reqBody.signInType){
         console.log("reqBody",req.body);
-        /*async.waterfall([
+        async.waterfall([
             function(triggerCallback){
                 console.log("first function");
                 criteria["email"] = reqBody.email;
@@ -194,17 +197,14 @@ const login = (req, callback)=>{
             console.log("final callback function in async")
             callback(err, result)
         }
-    )*/
-    callback(null,{
-        status:"success"
-    })
+    )
     }
     else{
         callback(true,{
             status:"error",
             message:"Please provide valid details"
         })
-    }
+    }*/
 }
 
 exports.signup = signup;
