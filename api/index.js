@@ -22,7 +22,14 @@ app.get("/",function(req,res){
     })
 })
 
-app.listen(PORT, function(){
-    connectDb()
+app.listen(PORT, async function(){
+    //connectDb()
+    await mongoose.connect(`${process.env.MONGODB_URI}`)
+    .then((data)=>{
+        console.log("database connection successfully established");
+    })
+    .catch((err)=>{
+        console.log(`Error occurred while connecting to db - ${err?.message}`)
+    })    
     console.log(`app running on ${PORT}`)
 })
