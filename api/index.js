@@ -16,6 +16,12 @@ app.use(multer({storage:storage}).any())
 app.use("/user",userRouter);
 app.use("/tasks",tasksRouter)
 
+app.get("/",function(req,res){
+    res.json({
+        status:"success"
+    })
+})
+
 app.listen(PORT, function(){
     connectDb()
     console.log(`app running on ${PORT}`)
