@@ -12,7 +12,7 @@ const mongoose = require("mongoose");
 
 
 const app=express()
-app.use(cors({origin:["http://localhost:3000","https://master--task-management-react123.netlify.app"]}))
+app.use(cors({origin:["https://master--task-management-react123.netlify.app"]}))
 app.use(express.json())
 app.use(multer({storage:storage}).any())
 app.use("/user",userRouter);
@@ -32,6 +32,6 @@ app.get("/",async function(req,res){
 })
 
 app.listen(PORT, async function(){
-    //connectDb()  
+    connectDb()  
     console.log(`app running on ${PORT}`)
 })
