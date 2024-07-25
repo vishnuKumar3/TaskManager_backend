@@ -119,22 +119,11 @@ const login = (req, callback)=>{
     let criteria = {};
     if(reqBody.email && reqBody.signInType){
         console.log("reqBody",req.body);
-        async.waterfall([
+        /*async.waterfall([
             function(triggerCallback){
                 console.log("first function");
                 criteria["email"] = reqBody.email;
-                let userInfo = {
-                    firstName:"",
-                    lastName:"",
-                    email:"",
-                    password:"",
-                    signInType:"",
-                    avatarInfo:{},
-                    _id:userId,
-                    userId:userId.toHexString()
-                }
-                triggerCallback(null,userInfo)
-                /*mongodb.user.findOne(criteria,function(err, response){
+                mongodb.user.findOne(criteria,function(err, response){
                     if(err){
                         triggerCallback(true,{
                             status:"error",
@@ -153,7 +142,7 @@ const login = (req, callback)=>{
                             })
                         }
                     }
-                })*/
+                })
             },
             function(userData, triggerCallback){
                 console.log("second function");
@@ -205,7 +194,10 @@ const login = (req, callback)=>{
             console.log("final callback function in async")
             callback(err, result)
         }
-    )
+    )*/
+    callback(null,{
+        status:"success"
+    })
     }
     else{
         callback(true,{
