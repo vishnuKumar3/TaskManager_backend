@@ -118,8 +118,10 @@ const login = (req, callback)=>{
     let reqBody = req.body;
     let criteria = {};
     if(reqBody.email && reqBody.signInType){
+        console.log("reqBody",req.body);
         async.waterfall([
             function(triggerCallback){
+                console.log("first function");
                 criteria["email"] = reqBody.email;
                 mongodb.user.findOne(criteria,function(err, response){
                     if(err){
@@ -143,6 +145,7 @@ const login = (req, callback)=>{
                 })
             },
             function(userData, triggerCallback){
+                console.log("second function");
                 if(reqBody.signInType.toLowerCase() === "google"){
                     triggerCallback(null, userData)
                 }
@@ -168,7 +171,8 @@ const login = (req, callback)=>{
                 }
             },
             function(userData, triggerCallback){
-                /*let minimalUserInfo = JSON.stringify({
+                console.log("thrid function");
+                let minimalUserInfo = JSON.stringify({
                     userId:userData.userId || "",
                     createdAtUnixTime:moment().valueOf()
                 })
@@ -183,13 +187,11 @@ const login = (req, callback)=>{
                         firstName:userData.firstName || "",
                         lastName:userData.lastName || ""
                     }
-                })*/
-                triggerCallback(null,{
-                    status:"success"
                 })
             }
         ],
         function(err, result){
+            console.log("final callback function in async")
             callback(err, result)
         }
     )
