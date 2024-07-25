@@ -1,11 +1,11 @@
 const express = require("express")
 require("dotenv").config()
 const PORT = process.env.PORT;
-const connectDb = require("./database_config");
-const userRouter = require("./routes/user")
+const connectDb = require("../database_config");
+const userRouter = require("../routes/user")
 const cors = require("cors");
 const multer = require("multer");
-const tasksRouter = require("./routes/tasks");
+const tasksRouter = require("../routes/tasks");
 const storage = multer.memoryStorage()
 
 
