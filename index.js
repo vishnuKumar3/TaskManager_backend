@@ -10,7 +10,7 @@ const storage = multer.memoryStorage()
 
 
 const app=express()
-app.options("*",cors())
+app.use(cors({origin:"*"}))
 app.use(express.json())
 app.use(multer({storage:storage}).any())
 app.use("/user",userRouter);
