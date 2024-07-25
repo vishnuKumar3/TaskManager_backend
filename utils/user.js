@@ -168,7 +168,7 @@ const login = (req, callback)=>{
                 }
             },
             function(userData, triggerCallback){
-                let minimalUserInfo = JSON.stringify({
+                /*let minimalUserInfo = JSON.stringify({
                     userId:userData.userId || "",
                     createdAtUnixTime:moment().valueOf()
                 })
@@ -183,6 +183,9 @@ const login = (req, callback)=>{
                         firstName:userData.firstName || "",
                         lastName:userData.lastName || ""
                     }
+                })*/
+                triggerCallback(null,{
+                    status:"success"
                 })
             }
         ],
