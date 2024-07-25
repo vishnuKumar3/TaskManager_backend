@@ -117,10 +117,7 @@ const signup = (req, callback)=>{
 const login = (req, callback)=>{
     let reqBody = req.body;
     let criteria = {};
-    callback(null,{
-        status:"error1"
-    })
-    /*if(reqBody.email && reqBody.signInType){
+    if(reqBody.email && reqBody.signInType){
         console.log("reqBody",req.body);
         async.waterfall([
             function(triggerCallback){
@@ -204,7 +201,7 @@ const login = (req, callback)=>{
             status:"error",
             message:"Please provide valid details"
         })
-    }*/
+    }
 }
 
 exports.signup = signup;
