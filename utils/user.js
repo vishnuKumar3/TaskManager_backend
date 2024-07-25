@@ -123,7 +123,18 @@ const login = (req, callback)=>{
             function(triggerCallback){
                 console.log("first function");
                 criteria["email"] = reqBody.email;
-                mongodb.user.findOne(criteria,function(err, response){
+                let userInfo = {
+                    firstName:"",
+                    lastName:"",
+                    email:"",
+                    password:"",
+                    signInType:"",
+                    avatarInfo:{},
+                    _id:userId,
+                    userId:userId.toHexString()
+                }
+                triggerCallback(null,userInfo)
+                /*mongodb.user.findOne(criteria,function(err, response){
                     if(err){
                         triggerCallback(true,{
                             status:"error",
@@ -142,7 +153,7 @@ const login = (req, callback)=>{
                             })
                         }
                     }
-                })
+                })*/
             },
             function(userData, triggerCallback){
                 console.log("second function");
