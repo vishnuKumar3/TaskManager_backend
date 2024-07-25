@@ -15,17 +15,18 @@ const app=express()
 app.use(cors({origin:["https://master--task-management-react123.netlify.app"]}))
 app.use(express.json())
 app.use(multer({storage:storage}).any())
+app.use(function(req, res,next){
+    connectDb();
+    console.log("Initialization of db connection");
+    setTimeout(()=>{
+        next();
+    },1000)
+})
 app.use("/user",userRouter);
 app.use("/tasks",tasksRouter)
 
 app.get("/",async function(req,res){
-    await mongoose.connect(`${process.env.MONGODB_URI}`)
-    .then((data)=>{
-        console.log("database connection successfully established");
-    })
-    .catch((err)=>{
-        console.log(`Error occurred while connecting to db - ${err?.message}`)
-    })      
+    connectDb();     
     res.json({
         status:"success"
     })
