@@ -7,6 +7,8 @@ const cors = require("cors");
 const multer = require("multer");
 const tasksRouter = require("../routes/tasks");
 const storage = multer.memoryStorage()
+const mongoose = require("mongoose");
+
 
 
 const app=express()
@@ -16,20 +18,20 @@ app.use(multer({storage:storage}).any())
 app.use("/user",userRouter);
 app.use("/tasks",tasksRouter)
 
-app.get("/",function(req,res){
-    res.json({
-        status:"success"
-    })
-})
-
-app.listen(PORT, async function(){
-    //connectDb()
+app.get("/",async function(req,res){
     await mongoose.connect(`${process.env.MONGODB_URI}`)
     .then((data)=>{
         console.log("database connection successfully established");
     })
     .catch((err)=>{
         console.log(`Error occurred while connecting to db - ${err?.message}`)
-    })    
+    })      
+    res.json({
+        status:"success"
+    })
+})
+
+app.listen(PORT, async function(){
+    //connectDb()  
     console.log(`app running on ${PORT}`)
 })
