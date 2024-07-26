@@ -12,7 +12,7 @@ const mongoose = require("mongoose");
 
 
 const app=express()
-app.use(cors({origin:["https://master--task-management-react123.netlify.app"]}))
+app.use(cors({origin:["https://task-management-react123.netlify.app","https://master--task-management-react123.netlify.app"]}))
 app.use(express.json())
 app.use(multer({storage:storage}).any())
 app.use(function(req, res,next){
