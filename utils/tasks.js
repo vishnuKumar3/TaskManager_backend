@@ -16,10 +16,11 @@ const addTask = (req, callback)=>{
         createdAtUnixTime:"",
         createdAtStr:"",
         title:"",
-        description:""
+        description:"",
+        dueDate:"",
     }
 
-    if(reqBody && reqBody.title && reqBody.description && reqBody.userId){
+    if(reqBody && reqBody.title && reqBody.description && reqBody.userId && reqBody.dueDate){
         async.waterfall([
             function(triggerCallback){
                 let uniqueId = new ObjectId();

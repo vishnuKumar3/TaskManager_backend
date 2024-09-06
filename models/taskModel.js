@@ -37,6 +37,10 @@ const taskModel = new mongoose.Schema({
     createdAtStr:{
         type:String,
         required:true
+    },
+    dueDate:{
+        type:String,
+        required:true
     }
 })
 
